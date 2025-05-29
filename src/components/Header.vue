@@ -1,8 +1,8 @@
 <script setup>
-import logo from '../../public/images/logo.png'
-import Cart from '../../public/icons/cart.svg'
-import Heart from '../../public/icons/heart.svg'
-import Profile from '../../public/icons/profile.svg'
+import logo from '/images/logo.png'
+import Cart from '/icons/cart.svg'
+import Heart from '/icons/heart.svg'
+import Profile from '/icons/profile.svg'
 </script>
 
 <template>
