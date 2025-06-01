@@ -5,13 +5,14 @@ import Plus from '/icons/plus.svg'
 import Checked from '/icons/checked.svg'
 
 defineProps({
+  id: Number,
   imgUrl: String,
   title: String,
   price: Number,
   isFavorite: Boolean,
   isAdded: Boolean,
-  onClickAdd: Function,
   onClickFavorite: Function,
+  onClickAdd: Function,
 })
 </script>
 <template>
