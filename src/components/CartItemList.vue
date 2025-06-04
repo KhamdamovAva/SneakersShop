@@ -1,13 +1,18 @@
 <script setup>
+import { inject } from 'vue'
 import CartItem from './CartItem.vue'
-import sneaker from '/images/sneakers/sneakers-1.jpg'
-import sneaker2 from '/images/sneakers/sneakers-4.jpg'
+
+const { cart, removeFromCart } = inject('cart')
 </script>
 <template>
   <div>
-    <CartItem title="Мужские Кроссовки Nike Air Max 270" :price="12999" :imageUrl="sneaker" />
-    <CartItem title="Мужские Кроссовки Nike Air Max 270" :price="8490" :imageUrl="sneaker2" />
-    <CartItem title="Мужские Кроссовки Nike Air Max 270" :price="12999" :imageUrl="sneaker" />
-    <CartItem title="Мужские Кроссовки Nike Air Max 270" :price="8490" :imageUrl="sneaker2" />
+    <CartItem
+      v-for="item in cart"
+      :key="item.id"
+      :title="item.title"
+      :price="item.price"
+      :image-url="item.imageUrl"
+      @on-click-remove="() => removeFromCart(item)"
+    />
   </div>
 </template>

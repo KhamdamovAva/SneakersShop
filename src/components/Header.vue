@@ -3,10 +3,15 @@ import logo from '/images/logo.png'
 import Cart from '/icons/cart.svg'
 import Heart from '/icons/heart.svg'
 import Profile from '/icons/profile.svg'
+
+const emit = defineEmits(['openDrawer'])
+
+defineProps({
+  totalPrice: Number,
+})
 </script>
 
 <template>
-
   <header class="flex justify-between border-b border-slate-200 px-10 py-8">
     <div class="flex items-center gap-4">
       <img class="w-10" :src="logo" alt="Logo" />
@@ -16,9 +21,12 @@ import Profile from '/icons/profile.svg'
       </div>
     </div>
     <ul class="flex items-center gap-10">
-      <li class="flex items-center gap-3 text-gray-500 hover:text-black cursor-pointer">
+      <li
+        @click="() => emit('openDrawer')"
+        class="flex items-center gap-3 text-gray-500 hover:text-black cursor-pointer"
+      >
         <img :src="Cart" alt="Cart" />
-        <b>1205 руб.</b>
+        <b>{{ totalPrice }} руб.</b>
       </li>
       <li class="flex items-center gap-3 text-gray-500 hover:text-black cursor-pointer">
         <img :src="Heart" alt="Heart" />
