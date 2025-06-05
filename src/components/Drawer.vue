@@ -1,19 +1,44 @@
 <script setup>
-// import CartItem from './CartItem.vue'
-import { inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import CartItemList from './CartItemList.vue'
 import nextIcon from '/icons/blackArrow-next.svg'
 import InfoContent from './InfoContent.vue'
 import box from '/icons/box.svg'
+import check from '/icons/check.svg'
+import axios from 'axios'
 
-const { closeDrawer } = inject('cart')
 const emit = defineEmits(['createOrder'])
 
-defineProps({
+const props = defineProps({
   totalPrice: Number,
   vatPrice: Number,
-  buttonDisabled: Boolean,
 })
+const { cart, closeDrawer } = inject('cart')
+
+const isCreatingOrder = ref(false)
+const orderId = ref(null)
+
+const createOrder = async () => {
+  try {
+    isCreatingOrder.value = true
+
+    const { data } = await axios.post(`https://015389e9b582cf1a.mokky.dev/orders`, {
+      items: cart.value,
+      totalPrice: props.totalPrice.value,
+    })
+
+    cart.value = []
+
+    orderId.value = data.id
+  } catch (error) {
+    console.log(error)
+  } finally {
+    isCreatingOrder.value = false
+  }
+}
+const cartIsEmpty = computed(() => cart.value.length === 0)
+
+const buttonDisabled = computed(() => isCreatingOrder.value || cartIsEmpty.value)
 </script>
 
 <template>
@@ -28,11 +53,19 @@ defineProps({
       />
       <h2 class="text-2xl font-bold">Корзина</h2>
     </div>
-    <div v-if="!totalPrice" class="flex h-full items-center">
+
+    <div v-if="!totalPrice || orderId" class="flex h-full items-center">
       <InfoContent
+        v-if="!totalPrice && !orderId"
         title="Корзина пустая"
         description="Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."
         :imageUrl="box"
+      />
+      <InfoContent
+        v-if="orderId"
+        title="Заказ оформлен!"
+        :description="`Ваш заказ # ${orderId} скоро будет передан курьерской доставке`"
+        :imageUrl="check"
       />
     </div>
 
@@ -52,7 +85,7 @@ defineProps({
         </div>
         <button
           :disabled="buttonDisabled"
-          @click="() => emit('createOrder')"
+          @click="createOrder"
           class="bg-lime-500 mt-3 w-full rounded-xl py-3 text-white hover:bg-lime-600 transition cursor-pointer active:bg-lime-700 disabled:bg-slate-300"
         >
           Оформить заказ
